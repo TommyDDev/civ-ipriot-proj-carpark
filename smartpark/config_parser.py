@@ -32,8 +32,15 @@ Finally, you can use `yaml` if you prefer.
 """
 
 
+def get_config(filename: str = "config.toml") -> dict:
+    import tomli
+    with open("config.toml", mode="rb") as fp:
+        config = tomli.load(fp)
+    return config
 
-def parse_config(config: dict) -> dict:
+
+def parse_config(config: dict, section: str) -> dict:
     """Parse the config file and return the values as a dictionary"""
     # TODO: get the configuration from a parsed file
-    return {'location': 'TBD', 'total_spaces': 0, 'broker_host': 'TBD', 'broker_port': 0}
+    the_config = config[section]
+    return the_config

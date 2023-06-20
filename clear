@@ -1,0 +1,119 @@
+[33mcommit 1b30ecd60fc2c2fdb0a1149a9eac207a0015951a[m[33m ([m[1;36mHEAD -> [m[1;32mProject-Modifications[m[33m, [m[1;31morigin/Project-Modifications[m[33m)[m
+Author: TommyDDev <J150212@tafe.wa.edu.au>
+Date:   Mon Jun 19 14:51:00 2023 +0800
+
+    Initial setup with working publisher and subscriber
+
+[33mcommit 1d64efe9092f696bdbdee837ff241d518565eee3[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: rafael <rafael.avigad@nmtafe.wa.edu.au>
+Date:   Tue Jun 6 10:17:13 2023 +0800
+
+    Added flow diagram
+
+[33mcommit 3a6bc82b815cceaa58f3ed7426768425d6c3a75e[m
+Author: rafael <rafael.avigad@nmtafe.wa.edu.au>
+Date:   Tue Jun 6 09:55:48 2023 +0800
+
+    Introduced temperature value that originates from the sensor
+
+[33mcommit 742c6dd62596ed2feb72cfa067e518958a69e3aa[m
+Author: TDM\avigar <rafael.avigad@nmtafe.wa.edu.au>
+Date:   Wed May 31 16:53:56 2023 +0800
+
+    normalized project structure to further simplify
+
+[33mcommit 146411bcf05e0b723abc33ec28136c783c1cd2d5[m
+Author: TDM\avigar <rafael.avigad@nmtafe.wa.edu.au>
+Date:   Wed May 31 16:39:50 2023 +0800
+
+    Simplification based on student feedback
+
+[33mcommit 8d76fd2e2978b1bb17284d3204d3b0349ce71f80[m
+Author: TDM\avigar <rafael.avigad@nmtafe.wa.edu.au>
+Date:   Wed May 31 15:30:12 2023 +0800
+
+    mid-point afternoon class
+
+[33mcommit 8f0cdc245b65c5e68e407537e8b248cc1c9a05be[m
+Author: TDM\avigar <rafael.avigad@nmtafe.wa.edu.au>
+Date:   Wed May 31 14:33:47 2023 +0800
+
+    Afternoon modifications
+
+[33mcommit a35c03ea4201f6c993ff5c3a9dd8a985b2d10516[m
+Author: TDM\avigar <rafael.avigad@nmtafe.wa.edu.au>
+Date:   Wed May 31 13:24:43 2023 +0800
+
+    end of morning class
+
+[33mcommit a44bc81c9cd8c72b613adc0f97d6c0b4402b8774[m
+Author: TDM\avigar <rafael.avigad@nmtafe.wa.edu.au>
+Date:   Wed May 31 11:58:25 2023 +0800
+
+    refactored mqtt and added carpark
+
+[33mcommit 6348875477ced1a2e21fea264970f22c706cf46c[m
+Author: TDM\avigar <rafael.avigad@nmtafe.wa.edu.au>
+Date:   Wed May 31 10:49:23 2023 +0800
+
+    updated sensor class with new settings
+
+[33mcommit 102ec930c0544a564de0333cbdefe4e8476acc76[m
+Author: rafrafavi <30427560+rafrafavi@users.noreply.github.com>
+Date:   Thu May 25 14:33:02 2023 +0800
+
+    Delete Pipfile
+
+[33mcommit d7e470457ddbe91b14aae49b7c3c47824619e510[m
+Author: rafrafavi <30427560+rafrafavi@users.noreply.github.com>
+Date:   Thu May 25 14:31:00 2023 +0800
+
+    document clean up
+
+[33mcommit f32009689445ad8837ff6652cc1645bd645ec4c7[m
+Author: TDM\avigar <rafael.avigad@nmtafe.wa.edu.au>
+Date:   Wed May 24 17:13:06 2023 +0800
+
+    added new tips
+
+[33mcommit be07f7d6ff3831a9ef76f5b07d21a25339330c0f[m
+Author: TDM\avigar <rafael.avigad@nmtafe.wa.edu.au>
+Date:   Wed May 24 16:43:41 2023 +0800
+
+    after mqtt is added
+
+[33mcommit ca58d61ddf9bb40fa3e36c6bf99d800ad2d8f745[m
+Author: TDM\avigar <rafael.avigad@nmtafe.wa.edu.au>
+Date:   Wed May 24 16:22:52 2023 +0800
+
+    before mqtt is added
+
+[33mcommit 510b7b8d061f02b2cbcfb15bebcec53c3e6cbe53[m
+Author: rafrafavi <30427560+rafrafavi@users.noreply.github.com>
+Date:   Mon May 1 10:42:43 2023 +0800
+
+    Minor update (typo)
+
+[33mcommit 780f01cf8e0e2bab90d0efb2607c0927ab0c6772[m
+Author: rafael <rafael.avigad@nmtafe.wa.edu.au>
+Date:   Sat Apr 29 11:00:12 2023 +0800
+
+    Added MQTT install for online students
+
+[33mcommit 46ae7113a80386a53315bff44a097a88ded20a4b[m
+Author: rafael <rafael.avigad@nmtafe.wa.edu.au>
+Date:   Sat Apr 29 08:30:42 2023 +0800
+
+    Major: updated project files and requirements
+
+[33mcommit b8ed49ded5b14d62a62bbb5f7d311df08993a606[m
+Author: rafael <rafael.avigad@nmtafe.wa.edu.au>
+Date:   Mon Apr 24 16:20:54 2023 +0800
+
+    Initial brief
+
+[33mcommit df1bcc82def3a229547a6b4302f2e96b9c3a8bd4[m
+Author: rafrafavi <30427560+rafrafavi@users.noreply.github.com>
+Date:   Mon Apr 24 14:08:11 2023 +0800
+
+    Initial commit

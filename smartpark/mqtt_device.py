@@ -15,10 +15,17 @@ class MqttDevice:
 
         # initialise a paho client and bind it to the object (has-a)
 
-        self.client = paho.Client()
+        self.client = paho.Client(self.name)
         self.client.connect(self.broker,
                             self.port)
 
     def _create_topic_string(self):
         return (f"{self.topic_root}/{self.location}/" +
                 f"{self.name}/{self.topic_qualifier}")
+
+    def publish(self, topic, message):
+        self.client.publish(topic, message)
+
+    def subscribe(self, topic):
+        """Subscribes the client to a topic."""
+        self.client.subscribe(topic)

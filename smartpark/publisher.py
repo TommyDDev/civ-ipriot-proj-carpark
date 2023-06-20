@@ -1,3 +1,5 @@
+import time
+from datetime import datetime
 import paho.mqtt.client as mqtt
 
 MQTT_HOST = "localhost"
@@ -14,4 +16,8 @@ print(f"Sending message to MQTT broker {MQTT_HOST} on port {MQTT_PORT}")
 print(f"with the topic {MQTT_TOPIC}...")
 
 message_to_send = "Hello..."
-client.publish(MQTT_TOPIC, message_to_send)
+
+while True:
+    time.sleep(5)
+    now = datetime.now()
+    client.publish(MQTT_TOPIC, message_to_send)
