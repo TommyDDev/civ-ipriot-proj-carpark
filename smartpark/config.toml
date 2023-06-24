@@ -3,10 +3,17 @@ broker = '127.0.0.1'
 port = 1883
 topic-root = 'carpark'
 topic-qualifier = 'controller'
-name = 'parking-lot'
-location = 'Moondalup'
 
-[Moondalup]
+[parking_lot]
 name = "Moondalup City Square Parking"
+location = 'Moondalup'
 total_spaces = 192
+status_topic = 'status'
 
+[sensor]
+name = 'parking_lot_sensor'
+topic = 'sensor'
+
+[display]
+name = 'parking_lot_display'
+location = 'Moondalup'
