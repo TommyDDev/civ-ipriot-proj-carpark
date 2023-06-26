@@ -1,5 +1,6 @@
 import paho.mqtt.client as paho
 import json
+import time
 from config_parser import parse_config, get_config
 
 
@@ -22,39 +23,30 @@ class ConfigHelper:
 
 class MqttDevice:
     def __init__(self, filename, name, location):
-        # Create config helper and extract configurations
         config_helper = ConfigHelper(filename)
         broker_config = config_helper.get_broker_config()
         sensor_config = config_helper.get_sensor_config()
         parking_lot_config = config_helper.get_parking_lot_config()
 
-        # Assign location and sensor from the config
         self.name = name
         self.location = location
         self.status_topic = parking_lot_config['status_topic']
 
-        # Define topic components:
         self.topic_root = broker_config['topic-root']
         self.topic_qualifier = broker_config['topic-qualifier']
         self.sensor_topic = sensor_config['topic']
         self.topic = self._create_topic_string()
 
-        # Configure broker
         self.broker = broker_config['broker']
         self.port = broker_config['port']
-
-        # initialise a paho client and bind it to the object (has-a)
-        # Here we are providing the client name as an argument to the paho.Client function
         self.client = paho.Client(self.name)
 
-        # Set up the callback methods
         self.client.on_connect = self.on_connect
-        self.client.on_disconnect = self.on_disconnect
+        self.client.on_disconnect = self.on_disconnect_callback
         self.client.on_message = self.on_message
 
         self.client.connect(self.broker, self.port)
-        self.message_handlers = {}  # Handlers for different messages
-
+        self.message_handlers = {}
 
     def _create_topic_string(self):
         return f"{self.topic_root}/{self.location}/{self.name}/{self.topic_qualifier}"
@@ -88,5 +80,8 @@ class MqttDevice:
     def on_connect(self, client, userdata, flags, rc):
         print(f"Connected with result code {rc}")
 
-    def on_disconnect(self, client, userdata, rc):
-        print("Disconnected from the broker")
+    def on_disconnect_callback(self, client, userdata, rc):
+        if rc != 0:
+            print("Unexpected MQTT disconnection. Attempting to reconnect.")
+            time.sleep(5)
+            self.client.reconnect()

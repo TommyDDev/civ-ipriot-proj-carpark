@@ -1,50 +1,72 @@
 import json
+import time
 import threading
 import queue
 import datetime
 from windowed_display import WindowedDisplay
 from mqtt_device import MqttDevice, ConfigHelper
-from config_parser import get_config
+
 
 class CarParkDisplay:
-    """Provides a simple display of the car park status. The class is designed to be customizable without requiring an understanding of tkinter or threading."""
-    # determines what fields appear in the UI
     fields = ['Available Spaces', 'Temperature', 'At']
 
-    def __init__(self, filename):
+    def __init__(self, filename: str):
         self.message_queue = queue.Queue()
         self.window = WindowedDisplay('Moondalup', CarParkDisplay.fields)
+        self.mqtt_client = None
+        self.mqtt_thread = None
+        self.main_thread = None
 
-        # Create the config helper
+        self._init(filename)
+
+        self.gui_updater()
+
+        self.mqtt_thread = threading.Thread(target=self.start_mqtt,
+                                            args=(filename, self.display_config['name'],
+                                                  self.display_config['location']))
+        self.mqtt_thread.start()
+
+    def _init(self, filename: str):
         config_helper = ConfigHelper(filename)
 
-        # Extract broker and parking lot configuration
-        broker_config = config_helper.get_broker_config()
-        parking_lot_config = config_helper.get_parking_lot_config()
-        display_config = config_helper.get_display_config()
+        self.broker_config = config_helper.get_broker_config()
+        self.parking_lot_config = config_helper.get_parking_lot_config()
+        self.display_config = config_helper.get_display_config()
 
-        # Create and connect the MQTT client
-        self.mqtt_client = MqttDevice(filename, display_config['name'], display_config['location'])
-
-        topic = f"{self.mqtt_client.topic_root}/{self.mqtt_client.location}/status"
-        self.mqtt_client.client.on_message = self.on_message_callback
-        self.mqtt_client.subscribe(topic)
-
-        # Initialize last received field values
         self.last_received_values = {
             'Available Spaces': '000',
             'Temperature': '00℃',
             'At': '00:00'
         }
 
-        # Start the MQTT client loop
-        self.mqtt_client.client.loop_start()
-
+    def start_gui(self):
+        self.window.window.protocol("WM_DELETE_WINDOW", self.on_close_window)
         self.window.show()
 
-        # Create a thread that will update the GUI with new messages
-        self.gui_updater_thread = threading.Thread(target=self.gui_updater, daemon=True)
-        self.gui_updater_thread.start()
+    def on_close_window(self):
+        print("Window close signal received, stopping program...")
+        self.stop_program()
+
+    def stop_program(self):
+        if self.mqtt_client:
+            self.mqtt_client.client.loop_stop()
+            self.mqtt_client.client.disconnect()
+        self.window.window.quit()
+
+    def start_mqtt(self, filename, name, location):
+        self.mqtt_client = MqttDevice(filename, name, location)
+        topic = f"{self.mqtt_client.topic_root}/{self.mqtt_client.location}/status"
+        self.mqtt_client.client.on_message = self.on_message_callback
+        self.mqtt_client.client.on_disconnect = self.on_disconnect_callback
+        self.mqtt_client.subscribe(topic)
+
+        self.mqtt_client.client.loop_start()
+
+    def on_disconnect_callback(self, client, userdata, rc):
+        if rc != 0:
+            print("Unexpected MQTT disconnection. Attempting to reconnect.")
+            time.sleep(5)
+            self.mqtt_client.reconnect()
 
     def on_message_callback(self, client, userdata, message):
         print(f"Received a message: {message.payload}")
@@ -60,35 +82,31 @@ class CarParkDisplay:
             print(f"Error processing message: {e}")
 
     def gui_updater(self):
-        while True:
-            # Get a new message from the queue
-            message = self.message_queue.get()
+        def check_queue():
+            if not self.message_queue.empty():
+                message = self.message_queue.get()
+                self.update_gui_with_message(message)
+            self.window.window.after(100, check_queue)
 
-            print(f'Parsed data: {message}')
+        check_queue()
 
-            if 'Available Spaces' in message:
-                self.last_received_values['Available Spaces'] = f'{int(message["Available Spaces"]):03d}'
-            if 'Temperature' in message and message['Temperature'] is not None:
-                self.last_received_values['Temperature'] = f'{int(message["Temperature"]):02d}℃'
-            else:
-                self.last_received_values['Temperature'] = 'N/A'
+    def update_gui_with_message(self, message):
+        print(f'Parsed data: {message}')
 
-            # Update the time every time a message is received
-            self.last_received_values['At'] = datetime.datetime.now().strftime("%H:%M")
+        if 'Available Spaces' in message:
+            self.last_received_values['Available Spaces'] = f'{int(message["Available Spaces"]):03d}'
+        if 'Temperature' in message and message['Temperature'] is not None:
+            self.last_received_values['Temperature'] = f'{int(message["Temperature"]):02d}℃'
+        else:
+            self.last_received_values['Temperature'] = 'N/A'
 
-            # Update the display with the field_values
-            print(f'Updating display with values: {self.last_received_values}')
-            self.window.update(self.last_received_values)
+        self.last_received_values['At'] = datetime.datetime.now().strftime("%H:%M")
+
+        print(f'Updating display with values: {self.last_received_values}')
+        self.window.update(self.last_received_values)
 
 
 if __name__ == '__main__':
-    car_park_display = None  # Initialize car_park_display
-    try:
-        # Read the config file
-        filename = "config.toml"
-        config = get_config(filename)
-        car_park_display = CarParkDisplay(config)  # Create an instance of CarParkDisplay
-    finally:
-        # Stop the loop before the program ends
-        if car_park_display is not None:  # Check if car_park_display is not None
-            car_park_display.mqtt_client.client.loop_stop()
+    filename = "config.toml"
+    car_park_display = CarParkDisplay(filename)
+    car_park_display.start_gui()
